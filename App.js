@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import { 
   View,
   Text,
-  Button,
+  TouchableOpacity,
   TextInput,
-  Image
+  Image,
  } from 'react-native';
  import {TextInputMask} from 'react-native-masked-text';
 
@@ -13,61 +13,68 @@ const App = () => {
   const [peso, setPeso] = useState('');
   const [altura, setAltura] = useState('');
   const [resultado, setResultado] = useState('');
-  const [tema, setTema] = useState('');
-  const [calcImc, setCalcImc] = useState(null);
-  let imc = peso / (altura * altura);
-   imc = imc.toFixed(1);
+  const [calcImc, setCalcImc] = useState('');
   
-  const calculadora = () =>{
-    if(altura && peso) {
-     // imc = imc * 100;
-    setTema('Seu imc é '),
-    setCalcImc(imc)
-    if(imc < 18.5)  {
-      setResultado('Peso baixo'),
-      setCalcImc(imc)
-    } else 
-     if(imc >= 18.5 && imc < 24.9) {
-         setResultado('Peso normal'),
-         setCalcImc(imc)
-    } else
-    if(imc >= 25 && imc < 30){
-      setResultado('Sobrepeso'),
-      setCalcImc(imc)
-    } else
-    if(imc >= 30 && imc < 35){
-      setResultado('Obesidade grau l'),
-      setCalcImc(imc)
-    
-    }else
-    if(imc >= 35 && imc < 40){
-      setResultado('Obesidade grau ll'),
-      setCalcImc(imc)
-    }else {
-      setResultado('Obesidade grau lll ou Mórbida'),
-      setCalcImc(imc)
-    } 
-  } else {
-    alert('Informe valores para calculo!'),
-    setCalcImc(imc)
-  }
-  };
-
-
-  return (
-    <View style={{
+ const calculadora = () => {
+      const tempA = parseFloat(altura);
+      const tempB = parseFloat(peso);
+     const calculando = ( tempB / (tempA * tempA));
+      switch(true){
+        case (calculando <= 18.5) :
+          setResultado('Peso baixo');
+          setCalcImc(calculando.toFixed(2));
+          setAltura('');
+          setPeso('');
+          break;
+        case (calculando >= 18.5 && calculando < 24.9) :
+          setResultado('Peso normal');
+          setCalcImc(calculando.toFixed(2));
+          setAltura('');
+          setPeso('');
+          break;
+        case (calculando >= 25 && calculando < 30) :
+            setResultado('Sobrepeso');
+            setCalcImc(calculando.toFixed(2));
+            setAltura('');
+            setPeso('');
+            break;
+        case (calculando >= 30 && calculando < 35) :
+            setResultado('Obesidade grau l');
+            setCalcImc(calculando.toFixed(2));
+            setAltura('');
+            setPeso('');
+            break;
+        case (calculando >= 35 && calculando < 40) :
+              setResultado('Obesidade grau ll');
+              setCalcImc(calculando.toFixed(2));
+              setAltura('');
+              setPeso('');
+              break;  
+        case (calculando > 40) :
+                setResultado('Obesidade grau lll ou Mórbida');
+                setCalcImc(calculando.toFixed(2));
+                setAltura('');
+                setPeso('');
+                break;  
+        default: 
+                alert('Preencha todos os campos!');
+      }
+    }
+    return (
+      <View style={{
       justifyContent: 'center',
        width:'100%', 
        height:'100%',
-       alignItems: 'center'
+       alignItems: 'center',
+       justifyContent:'center'
        }}>
-      <Image
+      <Image 
        source={require('./assets/imagem.jpg')}
        style={{
+        display: 'flex',
         with: '30%',
         height:'50%',
-        alignItems: 'center',
-        justifyContent:'center'
+        
       }}/>
       <Text style={{
         color:'#696969',
@@ -93,9 +100,10 @@ const App = () => {
         width: '80%',
         borderRadius: 10,
         marginVertical: 10,
-        textAlign:'center'}}/>
+        textAlign:'center'}} value={altura}/>
 
       <TextInput
+       value={peso}
       onChangeText={(value)=>setPeso(value)}
       placeholder='digite o peso' 
       keyboardType='numeric'
@@ -106,25 +114,13 @@ const App = () => {
         marginVertical: 20,
         textAlign:'center'}}/>
 
-      <Button 
-       onPress={calculadora}
-       title='Calcular'
-       color='#20B2AA'
-       style={{
-        width: '50%',
-        borderRadius: 10,
-        marginVertical: 20,
-        textAlign:'center'}}
-      />
-        
-      <Text style={{
-        color:'#696969',
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginTop: 10,
-        textAlign:'center'}}>{tema} {calcImc}</Text>
+      <TouchableOpacity  onPress={calculadora}>
+          <Text  style={{width:100, fontWeight: 'bold',fontSize:25, color:'#20B2AA', textAlign:'center'}}>calcular</Text>
+      </TouchableOpacity>
+      <Text style={{color:'#696969',fontSize: 20,marginTop: 10,textAlign:'center'}}>{calcImc}</Text>
+      
         <Text style={{
-        backgroundColor:'#FFA500',
+        backgroundColor:'black',
         color:'white',
         fontWeight: 'bold',
         fontSize: 25,
@@ -132,6 +128,6 @@ const App = () => {
         textAlign:'center'}}>{resultado}</Text>
     </View>
   );
-};
+}
 
 export default App;
